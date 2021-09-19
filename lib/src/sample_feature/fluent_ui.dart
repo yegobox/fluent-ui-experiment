@@ -57,113 +57,115 @@ class _FluentUiState extends State<FluentUi> {
   @override
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
-    return NavigationView(
-      pane: NavigationPane(
-        selected: index,
-        onChanged: (i) => setState(() => index = i),
-        header: Container(
-          height: kOneLineTileHeight,
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: const FlutterLogo(
-            style: FlutterLogoStyle.horizontal,
-            size: 100,
-          ),
-        ),
-        displayMode: appTheme.displayMode,
-        indicatorBuilder: ({
-          required BuildContext context,
-          int? index,
-          required List<Offset> Function() offsets,
-          required List<Size> Function() sizes,
-          required Axis axis,
-          required Widget child,
-        }) {
-          if (index == null) return child;
-          assert(debugCheckHasFluentTheme(context));
-          final theme = NavigationPaneTheme.of(context);
-          switch (appTheme.indicator) {
-            case NavigationIndicators.end:
-              return EndNavigationIndicator(
-                index: index,
-                offsets: offsets,
-                sizes: sizes,
-                child: child,
-                color: theme.highlightColor,
-                curve: theme.animationCurve ?? Curves.linear,
-                axis: axis,
-              );
-            case NavigationIndicators.sticky:
-              return NavigationPane.defaultNavigationIndicator(
-                index: index,
-                context: context,
-                offsets: offsets,
-                sizes: sizes,
-                axis: axis,
-                child: child,
-              );
-            default:
-              return NavigationIndicator(
-                index: index,
-                offsets: offsets,
-                sizes: sizes,
-                child: child,
-                color: theme.highlightColor,
-                curve: theme.animationCurve ?? Curves.linear,
-                axis: axis,
-              );
-          }
-        },
-        items: [
-          PaneItem(
-            icon: const Icon(FluentIcons.checkbox_composite),
-            title: const Text('Inputs'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.text_field),
-            title: const Text('Forms'),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.color),
-            title: const Text('Colors'),
-          ),
-          PaneItem(
-            icon: const Icon(FluentIcons.plain_text),
-            title: const Text('Typography'),
-          ),
-          PaneItem(
-              icon: const Icon(FluentIcons.cell_phone),
-              title: const Text('Mobile')),
-          PaneItem(
-            icon: Icon(
-              appTheme.displayMode == PaneDisplayMode.top
-                  ? FluentIcons.more
-                  : FluentIcons.more_vertical,
+    return SafeArea(
+      child: NavigationView(
+        pane: NavigationPane(
+          selected: index,
+          onChanged: (i) => setState(() => index = i),
+          header: Container(
+            height: kOneLineTileHeight,
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: const FlutterLogo(
+              style: FlutterLogoStyle.horizontal,
+              size: 100,
             ),
-            title: const Text('Others'),
           ),
-        ],
-        autoSuggestBox: AutoSuggestBox<String>(
-          controller: TextEditingController(),
-          items: const ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+          displayMode: PaneDisplayMode.compact,
+          indicatorBuilder: ({
+            required BuildContext context,
+            int? index,
+            required List<Offset> Function() offsets,
+            required List<Size> Function() sizes,
+            required Axis axis,
+            required Widget child,
+          }) {
+            if (index == null) return child;
+            assert(debugCheckHasFluentTheme(context));
+            final theme = NavigationPaneTheme.of(context);
+            switch (appTheme.indicator) {
+              case NavigationIndicators.end:
+                return EndNavigationIndicator(
+                  index: index,
+                  offsets: offsets,
+                  sizes: sizes,
+                  child: child,
+                  color: theme.highlightColor,
+                  curve: theme.animationCurve ?? Curves.linear,
+                  axis: axis,
+                );
+              case NavigationIndicators.sticky:
+                return NavigationPane.defaultNavigationIndicator(
+                  index: index,
+                  context: context,
+                  offsets: offsets,
+                  sizes: sizes,
+                  axis: axis,
+                  child: child,
+                );
+              default:
+                return NavigationIndicator(
+                  index: index,
+                  offsets: offsets,
+                  sizes: sizes,
+                  child: child,
+                  color: theme.highlightColor,
+                  curve: theme.animationCurve ?? Curves.linear,
+                  axis: axis,
+                );
+            }
+          },
+          items: [
+            PaneItem(
+              icon: const Icon(FluentIcons.checkbox_composite),
+              title: const Text('Inputs'),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.text_field),
+              title: const Text('Forms'),
+            ),
+            PaneItemSeparator(),
+            PaneItem(
+              icon: const Icon(FluentIcons.color),
+              title: const Text('Colors'),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.plain_text),
+              title: const Text('Typography'),
+            ),
+            PaneItem(
+                icon: const Icon(FluentIcons.cell_phone),
+                title: const Text('Mobile')),
+            PaneItem(
+              icon: Icon(
+                appTheme.displayMode == PaneDisplayMode.top
+                    ? FluentIcons.more
+                    : FluentIcons.more_vertical,
+              ),
+              title: const Text('Others'),
+            ),
+          ],
+          autoSuggestBox: AutoSuggestBox<String>(
+            controller: TextEditingController(),
+            items: const ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+          ),
+          autoSuggestBoxReplacement: const Icon(FluentIcons.search),
+          footerItems: [
+            PaneItemSeparator(),
+            PaneItem(
+                icon: const Icon(FluentIcons.settings),
+                title: const Text('Settings')),
+          ],
         ),
-        autoSuggestBoxReplacement: const Icon(FluentIcons.search),
-        footerItems: [
-          PaneItemSeparator(),
-          PaneItem(
-              icon: const Icon(FluentIcons.settings),
-              title: const Text('Settings')),
-        ],
+        content: NavigationBody(index: index, children: [
+          const InputsPage(),
+          const Forms(),
+          ColorsPage(controller: colorsController),
+          const TypographyPage(),
+          const Mobile(),
+          const Others(),
+          Settings(controller: settingsController),
+        ]),
       ),
-      content: NavigationBody(index: index, children: [
-        const InputsPage(),
-        const Forms(),
-        ColorsPage(controller: colorsController),
-        const TypographyPage(),
-        const Mobile(),
-        const Others(),
-        Settings(controller: settingsController),
-      ]),
     );
   }
 }
