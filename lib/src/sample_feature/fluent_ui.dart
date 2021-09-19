@@ -1,15 +1,9 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
-import '../settings/settings_view.dart';
 import 'sample_item.dart';
-import 'sample_item_details_view.dart';
 import 'screens/colors.dart';
-
 import 'screens/forms.dart';
 import 'screens/inputs.dart';
 import 'screens/mobile.dart';
@@ -32,8 +26,8 @@ class HexColor extends Color {
 }
 
 /// Displays a list of SampleItems.
-class SampleItemListView extends StatefulWidget {
-  const SampleItemListView({
+class FluentUi extends StatefulWidget {
+  const FluentUi({
     Key? key,
     this.items = const [SampleItem(1), SampleItem(2), SampleItem(3)],
   }) : super(key: key);
@@ -43,10 +37,10 @@ class SampleItemListView extends StatefulWidget {
   final List<SampleItem> items;
 
   @override
-  State<SampleItemListView> createState() => _SampleItemListViewState();
+  State<FluentUi> createState() => _FluentUiState();
 }
 
-class _SampleItemListViewState extends State<SampleItemListView> {
+class _FluentUiState extends State<FluentUi> {
   bool value = false;
 
   int index = 0;
@@ -55,8 +49,8 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   final settingsController = ScrollController();
   @override
   void dispose() {
-    colorsController.dispose();
-    settingsController.dispose();
+    // colorsController.dispose();
+    // settingsController.dispose();
     super.dispose();
   }
 
@@ -64,27 +58,6 @@ class _SampleItemListViewState extends State<SampleItemListView> {
   Widget build(BuildContext context) {
     final appTheme = context.watch<AppTheme>();
     return NavigationView(
-      appBar: NavigationAppBar(
-        // height: !kIsWeb ? appWindow.titleBarHeight : 31.0,
-        title: () {
-          if (kIsWeb) return const Text(appTitle);
-          return MoveWindow(
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(appTitle),
-            ),
-          );
-        }(),
-        actions: kIsWeb
-            ? null
-            : MoveWindow(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // children: const [Spacer(), WindowButtons()],
-                  children: const [Spacer()],
-                ),
-              ),
-      ),
       pane: NavigationPane(
         selected: index,
         onChanged: (i) => setState(() => index = i),
@@ -141,8 +114,6 @@ class _SampleItemListViewState extends State<SampleItemListView> {
           }
         },
         items: [
-          // It doesn't look good when resizing from compact to open
-          // PaneItemHeader(header: Text('User Interaction')),
           PaneItem(
             icon: const Icon(FluentIcons.checkbox_composite),
             title: const Text('Inputs'),
@@ -196,54 +167,3 @@ class _SampleItemListViewState extends State<SampleItemListView> {
     );
   }
 }
-
-
-// class WindowButtons extends StatelessWidget {
-//   const WindowButtons({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     assert(debugCheckHasFluentTheme(context));
-//     assert(debugCheckHasFluentLocalizations(context));
-//     final ThemeData theme = FluentTheme.of(context);
-//     final buttonColors = WindowButtonColors(
-//       iconNormal: theme.inactiveColor,
-//       iconMouseDown: theme.inactiveColor,
-//       iconMouseOver: theme.inactiveColor,
-//       mouseOver: ButtonThemeData.buttonColor(
-//           theme.brightness, {ButtonStates.hovering}),
-//       mouseDown: ButtonThemeData.buttonColor(
-//           theme.brightness, {ButtonStates.pressing}),
-//     );
-//     final closeButtonColors = WindowButtonColors(
-//       mouseOver: Colors.red,
-//       mouseDown: Colors.red.dark,
-//       iconNormal: theme.inactiveColor,
-//       iconMouseOver: Colors.red.basedOnLuminance(),
-//       iconMouseDown: Colors.red.dark.basedOnLuminance(),
-//     );
-//     return Row(children: [
-//       Tooltip(
-//         message: FluentLocalizations.of(context).minimizeWindowTooltip,
-//         child: MinimizeWindowButton(colors: buttonColors),
-//       ),
-//       Tooltip(
-//         message: FluentLocalizations.of(context).restoreWindowTooltip,
-//         child: WindowButton(
-//           colors: buttonColors,
-//           iconBuilder: (context) {
-//             if (appWindow.isMaximized) {
-//               return RestoreIcon(color: context.iconColor);
-//             }
-//             return MaximizeIcon(color: context.iconColor);
-//           },
-//           onPressed: appWindow.maximizeOrRestore,
-//         ),
-//       ),
-//       Tooltip(
-//         message: FluentLocalizations.of(context).closeWindowTooltip,
-//         child: CloseWindowButton(colors: closeButtonColors),
-//       ),
-//     ]);
-//   }
-// }

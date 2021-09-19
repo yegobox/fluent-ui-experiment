@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:qrlogin/src/sample_feature/screens/theme.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
+import 'sample_feature/fluent_ui.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -77,9 +77,9 @@ class MyApp extends StatelessWidget {
                         return SettingsView(controller: settingsController);
                       case SampleItemDetailsView.routeName:
                         return const SampleItemDetailsView();
-                      case SampleItemListView.routeName:
+                      case FluentUi.routeName:
                       default:
-                        return const SampleItemListView();
+                        return const FluentUi();
                     }
                   },
                 );
